@@ -10,14 +10,16 @@ const theme = computed(() => (osTheme.value === 'dark' ? darkTheme : null))
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColor: '#FF0000'
+    primaryColor: '#9c15ad',
+    baseColor: '#9c15ad',
+    primaryColorHover: '#9c15ad',
   },
-  Button: {
-    textColor: '#FF0000'
-  },
-  Icon: {
-    color: '#9c15ad',
-  },
+  // Button: {
+  //   textColor: '#FF0000'
+  // },
+  // Icon: {
+  //   color: '#9c15ad',
+  // },
 }
 </script>
 

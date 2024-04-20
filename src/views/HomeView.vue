@@ -1,16 +1,52 @@
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight, CirclePlus, BallBowling, Menu2, LayoutSidebarRight, Dots } from '@vicons/tabler'
 import ThemeIcons from '@/components/icons/ThemeIcons.vue'
-import { ref } from 'vue'
-const handleBack = () => {
-
-}
+import { ref, h } from 'vue'
+import type { TreeOption } from 'naive-ui'
+import { NIcon } from 'naive-ui'
+import { repeat } from 'seemly'
+import NoteView from '@/views/NoteView.vue'
 
 const LeftMenuActive = ref(false)
 
 const openLeftMenu = () => {
   console.log('openLeftMenu')
   LeftMenuActive.value = true
+}
+
+function createData (level = 4, baseKey = ''): TreeOption[] | undefined {
+  if (!level) return undefined
+  return repeat(6 - level, undefined).map((_, index) => {
+    const key = '' + baseKey + level + index
+    return {
+      label: createLabel(level),
+      key,
+      children: createData(level - 1, key)
+    }
+  })
+}
+
+function createLabel (level: number): string {
+  if (level === 4) return '日记'
+  if (level === 3) return '2024'
+  if (level === 2) return 'W40'
+  if (level === 1) return '2024-04-19'
+  return ''
+}
+
+const menuDrawerTree = ref(createData())
+
+const onNodeClick = (info: { option: TreeOption }) => {
+  console.log('info.option', info.option)
+
+  if (info.option.children?.length) {
+    return 'toggleExpand'
+  }
+  return 'default'
+}
+
+const renderSwitcherIcon= () => {
+  return h(NIcon, { width: 'auto' }, { default: () => h(ChevronRight) })
 }
 </script>
 
@@ -19,7 +55,6 @@ const openLeftMenu = () => {
     <header class="flex items-center">
       <theme-icons
         :component="LayoutSidebarRight"
-        class="header-icon-layout"
         @click="openLeftMenu"
       />
       <n-breadcrumb class="flex-1 text-center overflow-hidden">
@@ -31,10 +66,9 @@ const openLeftMenu = () => {
       <theme-icons :component="Dots"/>
     </header>
     <main class="flex-1">
-      主体
-      <n-button>Default</n-button>
+      <NoteView />
     </main>
-    <footer class="flex justify-around pb-4">
+    <footer class="flex justify-between pb-4">
       <theme-icons :component="ChevronLeft"/>
       <theme-icons :component="ChevronRight"/>
       <theme-icons :component="CirclePlus"/>
@@ -43,29 +77,52 @@ const openLeftMenu = () => {
     </footer>
   </div>
   <n-drawer
+    to="main"
     v-model:show="LeftMenuActive"
     width="85vw"
     placement="left"
   >
-    <n-drawer-content title="斯通纳">
-      《斯通纳》是美国作家约翰·威廉姆斯在 1965 年出版的小说。
+    <n-drawer-content body-class="menu-drawer">
+      <div class="menu-drawer-header">
+        <h1>
+          刘威
+        </h1>
+        <div class="menu-drawer-header-text">
+          128个文件，24个文件夹
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <n-tree
+          show-line
+          block-node
+          check-strategy="child"
+          :data="menuDrawerTree"
+          expand-on-click
+          :cancelable="false"
+          :render-switcher-icon="renderSwitcherIcon"
+          :override-default-node-click-behavior="onNodeClick"
+        />
+      </div>
+      <div>
+        底部
+      </div>
     </n-drawer-content>
   </n-drawer>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .home {
   height: 100%;
-
+  padding: 4px 16px;
 }
 
 header {
   gap: 16px;
-  padding: 4px 8px;
 }
 
 .n-icon {
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .header-icon-layout {
@@ -73,7 +130,11 @@ header {
 }
 
 .n-breadcrumb-item {
-  font-size: 14px;
+  font-size: 15px;
+}
+
+.n-tree {
+  font-size: 15px;
 }
 
 :deep(.n-breadcrumb-item__link) {
@@ -85,7 +146,25 @@ header {
   margin: 0 6px!important;
 }
 
+.menu-drawer {
+  .menu-drawer-header {
+    h1 {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .menu-drawer-header-text {
+      padding-top: 2px;
+      font-size: 13px;
+    }
+  }
+}
 
+:deep(.n-drawer-body-content-wrapper) {
+  display: flex;
+  flex-direction: column;
+}
 
-
+:deep(.n-tree-node-switcher) {
+  width: auto !important;
+}
 </style>
