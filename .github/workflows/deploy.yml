@@ -31,13 +31,13 @@ jobs:
       - name: 编译打包
         run: npm run build
 
-      - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-            SSH_PRIVATE_KEY: ${{ secrets.GYM }}
-            ARGS: '-rltgoDzvO --delete'
-            SOURCE: dist # 这是要复制到阿里云静态服务器的文件夹名称
-            REMOTE_HOST: ${{secrets.REMOTE_HOST}} # 你的阿里云公网地址
-            REMOTE_USER: root # 阿里云登录后默认为 root 用户，并且所在文件夹为 root
-            TARGET: /root/${{secrets.REMOTE_WEB_DIR}} # 打包后的 dist 文件夹将放在 /root/node-server
+      - name: Copy Files 2 Server
+        uses: appleboy/scp-action@master
+        with:
+            host: ${{secrets.REMOTE_HOST}}
+            username: "root"
+            password: "Lw951207"
+            port: 22
+            source: "dist"
+            target: "/root/gym/web"
 
