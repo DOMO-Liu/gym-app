@@ -36,12 +36,12 @@ jobs:
           mkdir -p ~/.ssh/
           echo "${{secrets.GYM}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{secrets.REMOTE_HOST}} >> ~/.ssh/known_hosts
+          ssh-keyscan 120.26.128.30 >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
 
       - name: 将远程服务器的对应目录下所有文件及文件夹删除
         run: | # gym/web
-          ssh root@${{secrets.REMOTE_HOST}} "
+          ssh root@120.26.128.30 "
             cd /root/${{secrets.REMOTE_WEB_DIR}};
             rm -rf ./*;
           "
