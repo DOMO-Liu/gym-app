@@ -31,23 +31,13 @@ jobs:
       - name: 编译打包
         run: npm run build
 
-      - name: 设置 id_rsa
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{secrets.GYM}}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{secrets.REMOTE_HOST}} >> ~/.ssh/known_hosts
-          cat ~/.ssh/known_hosts
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.GYM }}
+            ARGS: '-rltgoDzvO --delete'
+            SOURCE: dist # 这是要复制到阿里云静态服务器的文件夹名称
+            REMOTE_HOST: ${{secrets.REMOTE_HOST}} # 你的阿里云公网地址
+            REMOTE_USER: root # 阿里云登录后默认为 root 用户，并且所在文件夹为 root
+            TARGET: /root/${{secrets.REMOTE_WEB_DIR}} # 打包后的 dist 文件夹将放在 /root/node-server
 
-      - name: 将远程服务器的对应目录下所有文件及文件夹删除
-        run: | # gym/web
-          ssh root@${{secrets.REMOTE_HOST}} "
-            cd /root/${{secrets.REMOTE_WEB_DIR}};
-            rm -rf ./*;
-          "
-
-      - name: 将编译后的包复制到远程服务器对应目录
-        run: scp -r ./dist root@${{secrets.REMOTE_HOST}}:/root/${{secrets.REMOTE_WEB_DIR}}
-
-      - name: 删除 id_rsa
-        run: rm -rf ~/.ssh/id_rsa
