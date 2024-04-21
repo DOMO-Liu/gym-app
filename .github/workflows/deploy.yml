@@ -26,10 +26,10 @@ jobs:
           node-version: "18.18.2"
 
       - name: 安装依赖
-        run: npm
+        run: npm install
 
       - name: 编译打包
-        run: npm build
+        run: npm run build
 
       - name: 设置 id_rsa
         run: |
