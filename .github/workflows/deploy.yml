@@ -54,12 +54,8 @@ jobs:
 
       - name: scp ssh pipelines
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
-#        env:
-#          LASTSSH: "
-##            cd /root/${{secrets.REMOTE_WEB_DIR}};
-##            rm -rf ./*;
-##            scp -r ./dist /root/${{secrets.REMOTE_WEB_DIR}}
-#          "
+        env:
+          LASTSSH: "Doing something after copying"
         with:
           host: 120.26.128.30
           user: root
