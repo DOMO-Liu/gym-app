@@ -8,6 +8,7 @@ const osTheme = useOsTheme()
 
 const theme = computed(() => (osTheme.value === 'dark' ? darkTheme : null))
 
+
 const themeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#9c15ad',
