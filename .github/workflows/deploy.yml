@@ -36,19 +36,18 @@ jobs:
           mkdir -p ~/.ssh/
           echo "${{secrets.GYM}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 120.26.128.30 >> ~/.ssh/known_hosts
+          ssh-keyscan ${{secrets.REMOTE_HOST}} >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
 
       - name: 将远程服务器的对应目录下所有文件及文件夹删除
         run: | # gym/web
-          ssh root@120.26.128.30 "
-            zz123456;
-            cd /root/gym/web;
+          ssh root@${{secrets.REMOTE_HOST}} "
+            cd /root/${{secrets.REMOTE_WEB_DIR}};
             rm -rf ./*;
           "
 
       - name: 将编译后的包复制到远程服务器对应目录
-        run: scp -r ./dist root@120.26.128.30:/root/gym/web
+        run: scp -r ./dist root@${{secrets.REMOTE_HOST}}:/root/${{secrets.REMOTE_WEB_DIR}}
 
       - name: 删除 id_rsa
         run: rm -rf ~/.ssh/id_rsa
