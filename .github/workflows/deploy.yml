@@ -36,7 +36,7 @@ jobs:
         with:
             host: ${{secrets.REMOTE_HOST}}
             username: "root"
-            password: "Lw951207"
+            password: ${{secrets.PASSWORD}}
             port: 22
             source: "dist"
             target: "/root/gym/web"
