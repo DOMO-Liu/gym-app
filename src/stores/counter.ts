@@ -1,12 +1,12 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+export const useThemeStore = defineStore('counter', () => {
+  const primaryColor = ref('126, 21, 173')
+
+  const getPrimaryColorAlpha = (alpha = 1) => {
+    return `rgba(${primaryColor.value}, ${alpha})`
   }
 
-  return { count, doubleCount, increment }
+  return { primaryColor, getPrimaryColorAlpha }
 })

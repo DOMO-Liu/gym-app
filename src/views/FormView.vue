@@ -1,20 +1,30 @@
 <script setup lang="ts">
-import { type Ref, ref } from 'vue'
-import { useFormHook } from '@/hook/use-form-hook'
+import { type Component, type Ref, ref } from 'vue'
+import { type FormListItem, useFormHook } from '@/hook/use-form-hook'
+import { useDateRef } from '@/hook/use-data-ref'
 
-interface ModelType {
-  age: string | null
-  password: string | null
-  reenteredPassword: string | null
+// interface ModelType {
+//   age: string | null
+//   password: string | null
+//   reenteredPassword: string | null
+// }
+//
+// const model = ref<ModelType>({
+//   age: null,
+//   password: null,
+//   reenteredPassword: null
+// })
+
+interface Props {
+  formList: FormListItem[]
+  formData: Recordable
 }
 
-const model = ref<ModelType>({
-  age: null,
-  password: null,
-  reenteredPassword: null
-})
+const props = defineProps<Props>()
 
-const { formList, formData } = useFormHook()
+// const { formList, formData } = useFormHook()
+
+const [state] = useDateRef(props, 'formData', 'update:modelValue')
 
 navigator.geolocation.getCurrentPosition(position => {
   const latitude = position.coords.latitude;
@@ -37,12 +47,12 @@ const  onInputFocus = (index: number) => {
   <n-form
     class="note-item-padding"
     ref="formRef"
-    :model="model"
+    :model="state"
     :show-feedback="false"
     label-placement="left"
   >
     <n-form-item
-      v-for="(item, index) in formList"
+      v-for="item in formList"
       :key="item.id"
       :path="item.id"
       size="small"
@@ -58,7 +68,7 @@ const  onInputFocus = (index: number) => {
 
       </template>
       <n-select
-        v-model:value="formData[item.id]"
+        v-model:value="state[item.id]"
         :options="item.options"
         :placeholder="item.placeholder"
       />

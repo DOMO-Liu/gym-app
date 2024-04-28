@@ -1,5 +1,7 @@
-import { reactive } from 'vue'
-interface FormListItem {
+import { ref } from 'vue'
+import type { Ref }  from 'vue'
+
+export interface FormListItem {
   icon: string
   id: string
   text: string
@@ -91,7 +93,7 @@ export function useFormHook() {
     },
   ]
 
-  const formData: Record<string, any> = reactive({})
+  const formData: Ref<Recordable> = ref({})
 
   return {
     formList,

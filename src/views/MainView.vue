@@ -6,12 +6,10 @@ import type { TreeOption } from 'naive-ui'
 import { NIcon } from 'naive-ui'
 import { repeat } from 'seemly'
 import NoteView from '@/views/NoteView.vue'
-import weather from '@/assets/images/weather.png'
 
 const LeftMenuActive = ref(false)
 
 const openLeftMenu = () => {
-  console.log('openLeftMenu')
   LeftMenuActive.value = true
 }
 
@@ -70,13 +68,9 @@ const renderSwitcherIcon= () => {
       />
     </header>
     <main class="flex-1">
-      <n-button color="#333638" text-color="#FFFFFF">
-        Tertiary
-      </n-button>
-      <n-image :src="weather" />
       <NoteView />
     </main>
-    <footer class="flex justify-between pb-4">
+    <footer class="flex justify-between">
       <theme-icons :component="Notebook"/>
       <theme-icons :component="CalendarEvent"/>
       <theme-icons :component="ChartPie"/>
@@ -120,12 +114,28 @@ const renderSwitcherIcon= () => {
 
 <style scoped lang="scss">
 .home {
-  height: 100%;
-  padding: 4px 16px;
+  height: 100vh;
+  padding: 0 16px;
+  overflow: hidden;
 }
 
 header {
   gap: 16px;
+}
+
+main {
+  //padding-bottom: 80px;
+}
+
+footer {
+  //position: fixed;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  background: #ffffff;
+  //padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+  padding-top: 8px;
 }
 
 .n-icon {
