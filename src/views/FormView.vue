@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { type Ref, ref } from 'vue'
 import { useFormHook } from '@/hook/use-form-hook'
 
 interface ModelType {
@@ -14,7 +14,7 @@ const model = ref<ModelType>({
   reenteredPassword: null
 })
 
-const { formList } = useFormHook()
+const { formList, formData } = useFormHook()
 
 navigator.geolocation.getCurrentPosition(position => {
   const latitude = position.coords.latitude;
@@ -26,6 +26,11 @@ navigator.geolocation.getCurrentPosition(position => {
   // getWeatherData(latitude, longitude);
 });
 
+const focusIndex: Ref<null | number> = ref(null)
+
+const  onInputFocus = (index: number) => {
+  focusIndex.value = index
+}
 </script>
 
 <template>
@@ -37,16 +42,25 @@ navigator.geolocation.getCurrentPosition(position => {
     label-placement="left"
   >
     <n-form-item
-      v-for="item in formList"
+      v-for="(item, index) in formList"
       :key="item.id"
       :path="item.id"
       size="small"
     >
       <template v-slot:label>
-        {{item.icon}}{{item.text}}:
+        <div class="note-item-label">
+          <span>
+            {{item.icon}}
+          </span>
+          {{item.text}}
+          <n-divider vertical />
+        </div>
+
       </template>
-      <n-input
-        placeholder=""
+      <n-select
+        v-model:value="formData[item.id]"
+        :options="item.options"
+        :placeholder="item.placeholder"
       />
     </n-form-item>
   </n-form>
@@ -55,5 +69,24 @@ navigator.geolocation.getCurrentPosition(position => {
 <style scoped lang="scss">
 :deep(.n-input__border) {
   border: none;
+}
+
+.n-form-item {
+  border: 1px solid rgb(171 179 186 / 67%);
+  padding: 10px;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+:deep(.n-base-selection__border) {
+  border: none;
+}
+
+:deep(.n-base-selection__state-border) {
+  border: none !important;
+  box-shadow: none !important;
+}
+.note-item-label {
+  letter-spacing: 4px;
 }
 </style>
