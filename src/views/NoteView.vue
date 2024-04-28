@@ -4,31 +4,15 @@
   </h1>
   <h1 class="note-item-padding note-summarize">
     <n-button
+      v-for="(item, index) in summarizeList"
+      :key="'button' + item.value"
       strong
       secondary
       round
-      type="primary"
-      @click="onClickWeather"
+      :type="formData[item.value] ? 'primary' : 'tertiary'"
+      @click="chooseSummarize(index)"
     >
-      天气
-    </n-button>
-    <n-button
-      strong
-      secondary
-      round
-      type="primary"
-      @click="onClickWeather"
-    >
-      心情
-    </n-button>
-    <n-button
-      strong
-      secondary
-      round
-      type="primary"
-      @click="onClickWeather"
-    >
-      位置
+      {{ formData[item.value] || item.label }}
     </n-button>
   </h1>
   <h1 class="note-title note-item-padding">
@@ -43,7 +27,6 @@
   </h1>
 
   <n-drawer
-    to="main"
     v-model:show="bottomMenuActive"
     placement="bottom"
   >
@@ -58,7 +41,7 @@
       <n-carousel
         show-arrow
         :loop="false"
-        :default-index="carouselIndex"
+        ref="carouselRef"
       >
         <div
           class="menu-drawer-content"
@@ -78,8 +61,11 @@
                 v-for="option in item.options"
                 :key="option.value"
                 class="drawer-option"
+                :class="{
+                  'drawer-option-choose': formData[item.value] === option.value
+                }"
+                @click="onClickSummarizeResult(item.value, option)"
               >
-
                 <n-image
                   v-if="option.img"
                   preview-disabled
@@ -107,7 +93,7 @@
             </div>
             <div>
               <button
-                v-show="currentIndex !== total"
+                v-show="currentIndex !== total - 1"
                 type="button"
                 class="custom-arrow--right"
                 @click="next"
@@ -135,7 +121,7 @@
 
 <script lang="ts" setup>
 import FormView from '@/views/FormView.vue'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { ArrowBack, ArrowForward } from '@vicons/tabler'
 import { useThemeStore } from '@/stores/counter'
 import weatherCloudy from '@/assets/images/weather_cloudy.png'
@@ -236,8 +222,19 @@ const summarizeList: SummarizeList[] = [
   },
 ]
 
-const onClickWeather = () => {
+const carouselRef = ref()
+
+const chooseSummarize = (index: number) => {
+  carouselIndex.value = index
   bottomMenuActive.value = true
+  nextTick(() => {
+    carouselRef.value?.to(carouselIndex.value)
+  })
+}
+
+const onClickSummarizeResult = (key: string, option: SummarizeOption) => {
+  console.log('option', option)
+  formData.value[key] = option.value
 }
 </script>
 
@@ -258,11 +255,11 @@ const onClickWeather = () => {
   text-align: center;
   display: flex;
   flex-direction: column;
+  height: calc(100% - 20px);
 }
 
 
 .drawer-options {
-  padding: 20px 0 0 0;
   display: flex;
   justify-content: space-between;
   font-size: 12px;
@@ -277,6 +274,11 @@ const onClickWeather = () => {
     height: 50px;
     box-shadow: 0 0 0 2px rgb(211 207 213 / 20%);
     border-radius: 6px;
+  }
+
+  .drawer-option-choose {
+    background: #000000;
+    color: #ffffff;
   }
 }
 
@@ -339,5 +341,9 @@ const onClickWeather = () => {
 .custom-dots li.is-active {
   width: 40px;
   background-color: var(--d-color);
+}
+
+:deep(.n-base-close:not(.n-base-close--disabled):hover::before ) {
+  background: transparent;
 }
 </style>

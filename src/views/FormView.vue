@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type Component, type Ref, ref } from 'vue'
-import { type FormListItem, useFormHook } from '@/hook/use-form-hook'
+import { type Ref, ref } from 'vue'
+import { type FormListItem } from '@/hook/use-form-hook'
 import { useDateRef } from '@/hook/use-data-ref'
 
 // interface ModelType {
@@ -45,7 +45,6 @@ const  onInputFocus = (index: number) => {
 
 <template>
   <n-form
-    class="note-item-padding"
     ref="formRef"
     :model="state"
     :show-feedback="false"
