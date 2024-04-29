@@ -3,14 +3,17 @@ import type { Component } from 'vue'
 
 interface Props {
   component: Component
+  color: string
 }
 
-const props = defineProps<Props>()
+
+const props = withDefaults(defineProps<Props>(), {
+  color: '#9c15ad',
+})
 </script>
 
 <template>
-  <n-icon :component="component" color="#9c15ad">
-  </n-icon>
+  <n-icon :component="component" :color="color" />
 </template>
 
 <style scoped>

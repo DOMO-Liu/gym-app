@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { CalendarEvent, ChevronRight, ChartPie, Menu2, Notebook } from '@vicons/tabler'
+import { ChevronRight, Menu2 } from '@vicons/tabler'
 import ThemeIcons from '@/components/icons/ThemeIcons.vue'
 import { ref, h } from 'vue'
 import type { TreeOption } from 'naive-ui'
 import { NIcon } from 'naive-ui'
 import { repeat } from 'seemly'
-import NoteView from '@/views/NoteView.vue'
+import NoteView from '@/views/Home/NoteView.vue'
 
 const LeftMenuActive = ref(false)
 

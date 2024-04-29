@@ -6,7 +6,7 @@ export const routes = [
     children: [
       {
         path: '',
-        component: () => import('@/views/HomeView.vue'),
+        component: () => import('@/views/Home/HomeView.vue'),
         name: 'index',
         meta: {
           keepAlive: true,

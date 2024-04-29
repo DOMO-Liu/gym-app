@@ -1,6 +1,32 @@
 <script setup lang="ts">
 import { CalendarEvent, ChartPie, Menu2, Notebook } from '@vicons/tabler'
 import ThemeIcons from '@/components/icons/ThemeIcons.vue'
+import { ref } from 'vue'
+
+const tabIndex = ref(0)
+
+const tabList =  [
+  {
+    component: Notebook,
+    text: '首页'
+  },
+  {
+    component: CalendarEvent,
+    text: '日历'
+  },
+  {
+    component: ChartPie,
+    text: '统计'
+  },
+  {
+    component: Menu2,
+    text: '我的'
+  },
+]
+
+const onClickTab = (index: number) => {
+  tabIndex.value = index
+}
 </script>
 
 <template>
@@ -17,10 +43,13 @@ import ThemeIcons from '@/components/icons/ThemeIcons.vue'
       </router-view>
     </div>
     <footer class="flex justify-between">
-      <theme-icons :component="Notebook"/>
-      <theme-icons :component="CalendarEvent"/>
-      <theme-icons :component="ChartPie"/>
-      <theme-icons :component="Menu2"/>
+      <theme-icons
+        @click="onClickTab(index)"
+        v-for="(item, index) in tabList"
+        :component="item.component"
+        :key="`tab${index}`"
+        :color="tabIndex === index ? '#9c15ad' : '#767c82'"
+      />
     </footer>
   </div>
 </template>
@@ -28,64 +57,15 @@ import ThemeIcons from '@/components/icons/ThemeIcons.vue'
 <style scoped lang="scss">
 .home {
   height: 100vh;
-  //padding: 0 16px;
   overflow: hidden;
-}
-
-header {
-  gap: 16px;
 }
 
 footer {
   padding: 8px 16px calc(env(safe-area-inset-bottom) + 8px);
-  //padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
-  //padding-top: 8px;
+  box-shadow: 0 0 0 1px rgb(211 207 213 / 20%);
 }
 
 .n-icon {
   font-size: 26px;
-}
-
-.header-icon-layout {
-  font-size: 20px;
-}
-
-.n-breadcrumb-item {
-  font-size: 15px;
-}
-
-.n-tree {
-  font-size: 15px;
-}
-
-:deep(.n-breadcrumb-item__link) {
-  color: rgb(118, 124, 130) !important;
-  padding: 0!important;
-}
-
-:deep(.n-breadcrumb-item__separator) {
-  margin: 0 6px!important;
-}
-
-.menu-drawer {
-  .menu-drawer-header {
-    h1 {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .menu-drawer-header-text {
-      padding-top: 2px;
-      font-size: 13px;
-    }
-  }
-}
-
-:deep(.n-drawer-body-content-wrapper) {
-  display: flex;
-  flex-direction: column;
-}
-
-:deep(.n-tree-node-switcher) {
-  width: auto !important;
 }
 </style>

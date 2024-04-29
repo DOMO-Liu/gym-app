@@ -154,7 +154,7 @@
 </template>
 
 <script lang="ts" setup>
-import FormView from '@/views/FormView.vue'
+import FormView from '@/views/Home/FormView.vue'
 import { computed, nextTick, ref } from 'vue'
 import { ArrowBack, ArrowForward } from '@vicons/tabler'
 import { useThemeStore } from '@/stores/counter'
