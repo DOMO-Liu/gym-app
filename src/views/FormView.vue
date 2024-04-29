@@ -22,24 +22,13 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// const { formList, formData } = useFormHook()
-
 const [state] = useDateRef(props, 'formData', 'update:modelValue')
 
-navigator.geolocation.getCurrentPosition(position => {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
+const focusIndex: Ref<string> = ref('')
 
-  console.log(latitude, longitude, position)
-
-  // 在这里调用获取天气数据的函数
-  // getWeatherData(latitude, longitude);
-});
-
-const focusIndex: Ref<null | number> = ref(null)
-
-const  onInputFocus = (index: number) => {
+const  onInputFocus = (index: string) => {
   focusIndex.value = index
+  console.log('onInputFocus', focusIndex.value)
 }
 </script>
 
@@ -64,25 +53,54 @@ const  onInputFocus = (index: number) => {
           {{item.text}}
           <n-divider vertical />
         </div>
-
       </template>
-      <n-select
-        v-model:value="state[item.id]"
-        :options="item.options"
-        :placeholder="item.placeholder"
-      />
+      <template v-if="item.type === 'input'">
+        <n-input
+          v-model:value="state[item.id]"
+          :placeholder="focusIndex === item.id ? item.placeholder : ''"
+          :data-id="item.id"
+          @focus="onInputFocus(item.id)"
+          @blur="focusIndex = ''"
+        />
+      </template>
+      <template v-if="item.type === 'select'">
+        <n-select
+          v-model:value="state[item.id]"
+          :options="item.options"
+          :placeholder="focusIndex === item.id ? item.placeholder : ''"
+          :show-arrow="false"
+          @focus="onInputFocus(item.id)"
+          @blur="focusIndex = ''"
+          clearable
+        />
+      </template>
+
     </n-form-item>
   </n-form>
 </template>
 
 <style scoped lang="scss">
+:deep(.n-input) {
+  --n-color: transparent !important;
+}
+
+:deep(.n-base-selection-label) {
+  background-color: transparent !important;
+}
+
 :deep(.n-input__border) {
-  border: none;
+  border: none !important;
+}
+
+:deep(.n-input__state-border) {
+  border: none !important;
+}
+
+.n-form {
+  padding: 0 4px;
 }
 
 .n-form-item {
-  border: 1px solid rgb(171 179 186 / 67%);
-  padding: 10px;
   border-radius: 4px;
   margin: 8px 0;
 }

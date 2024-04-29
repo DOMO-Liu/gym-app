@@ -75,7 +75,6 @@ const renderSwitcherIcon= () => {
 
   </div>
   <n-drawer
-    to="main"
     v-model:show="LeftMenuActive"
     width="85vw"
     placement="left"
@@ -112,6 +111,7 @@ const renderSwitcherIcon= () => {
 <style scoped lang="scss">
 .home {
   height: 100%;
+  padding: 12px 16px;
 }
 
 header {

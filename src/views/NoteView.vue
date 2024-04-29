@@ -2,19 +2,29 @@
   <h1 class="note-title note-item-padding">
     2024-04-20
   </h1>
-  <h1 class="note-item-padding note-summarize">
-    <n-button
+  <div class="note-item-padding note-summarize overflow-hidden">
+    <div
       v-for="(item, index) in summarizeList"
       :key="'button' + item.value"
-      strong
-      secondary
-      round
-      :type="formData[item.value] ? 'primary' : 'tertiary'"
-      @click="chooseSummarize(index)"
+      class="overflow-hidden"
+      :class="{
+        'flex-1' : index === summarizeList.length - 1,
+      }"
     >
-      {{ formData[item.value] || item.label }}
-    </n-button>
-  </h1>
+      <n-button
+        strong
+        secondary
+        round
+        :type="formData[item.value] ? 'primary' : 'tertiary'"
+        @click="chooseSummarize(index)"
+        style="max-width: 100%"
+      >
+        <n-ellipsis style="max-width: 100%">
+          {{ formData[item.chooseLabel] || item.label }}
+        </n-ellipsis>
+      </n-button>
+    </div>
+  </div>
   <h1 class="note-title note-item-padding">
     OKR Tracker
   </h1>
@@ -26,6 +36,29 @@
     Notes
   </h1>
 
+
+  <n-auto-complete
+    v-model:value="noteValue"
+    :options="appendOptions"
+    :append="true"
+    :get-show="getShow"
+  >
+    <template
+      #default="{ handleInput, handleBlur, handleFocus, value: slotValue }"
+    >
+      <n-input
+        type="textarea"
+        :placeholder="notePlaceholder"
+        :value="slotValue"
+        @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        :autosize="{
+        minRows: 3
+      }"
+      />
+    </template>
+  </n-auto-complete>
   <n-drawer
     v-model:show="bottomMenuActive"
     placement="bottom"
@@ -54,6 +87,7 @@
 
           <div class="drawer-options">
             <n-input
+              v-model:value="formData[item.value]"
               v-if="item.type === 'input'"
             />
             <template v-else>
@@ -64,7 +98,7 @@
                 :class="{
                   'drawer-option-choose': formData[item.value] === option.value
                 }"
-                @click="onClickSummarizeResult(item.value, option)"
+                @click="onClickSummarizeResult(item, option)"
               >
                 <n-image
                   v-if="option.img"
@@ -121,7 +155,7 @@
 
 <script lang="ts" setup>
 import FormView from '@/views/FormView.vue'
-import { nextTick, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { ArrowBack, ArrowForward } from '@vicons/tabler'
 import { useThemeStore } from '@/stores/counter'
 import weatherCloudy from '@/assets/images/weather_cloudy.png'
@@ -138,6 +172,27 @@ const bottomMenuActive = ref(false)
 
 const { formList, formData } = useFormHook()
 
+
+const noteValue = ref('')
+
+const notePlaceholder = `你可以在这里记录任何事情
+比如你的今日饮食、运动情况
+或者记录你今天阅读的书籍`
+
+
+const getShow = (value: string) => {
+  return value.endsWith('# ');
+}
+
+const appendOptions = computed(() => {
+  return formList.map((suffix) => {
+    return {
+      label: suffix.text,
+      value: suffix.id,
+    }
+  })
+})
+
 interface SummarizeOption {
   value: string,
   label: string,
@@ -148,6 +203,7 @@ interface SummarizeList {
   label: string
   value: string
   describe: string
+  chooseLabel: string
   type: 'select' | 'describe' | 'input'
   options?: SummarizeOption[]
 }
@@ -156,6 +212,7 @@ const summarizeList: SummarizeList[] = [
   {
     label: '天气',
     value: 'weather',
+    chooseLabel: 'weatherLabel',
     describe: '不知道你那天气如何？',
     type: 'select',
     options: [
@@ -189,6 +246,7 @@ const summarizeList: SummarizeList[] = [
   {
     label: '心情',
     value: 'mood',
+    chooseLabel: 'moodLabel',
     describe: '这一天的心情怎样的呢？',
     type: 'describe',
     options: [
@@ -216,6 +274,7 @@ const summarizeList: SummarizeList[] = [
   },
   {
     label: '位置',
+    chooseLabel: 'location',
     value: 'location',
     describe: '你此刻在何处？',
     type: 'input',
@@ -232,9 +291,9 @@ const chooseSummarize = (index: number) => {
   })
 }
 
-const onClickSummarizeResult = (key: string, option: SummarizeOption) => {
-  console.log('option', option)
-  formData.value[key] = option.value
+const onClickSummarizeResult = (data: SummarizeList, option: SummarizeOption) => {
+  formData.value[data.value] = option.value
+  formData.value[data.chooseLabel] = option.label
 }
 </script>
 
@@ -345,5 +404,19 @@ const onClickSummarizeResult = (key: string, option: SummarizeOption) => {
 
 :deep(.n-base-close:not(.n-base-close--disabled):hover::before ) {
   background: transparent;
+}
+
+.n-input {
+  background: transparent !important;
+  :deep(.n-input-wrapper) {
+    padding: 0;
+  }
+}
+:deep(.n-input__border) {
+  border: none !important;
+}
+:deep(.n-input__state-border) {
+  border: none !important;
+  box-shadow: none !important;
 }
 </style>

@@ -1,48 +1,6 @@
 <script setup lang="ts">
-import { CalendarEvent, ChevronRight, ChartPie, Menu2, Notebook } from '@vicons/tabler'
+import { CalendarEvent, ChartPie, Menu2, Notebook } from '@vicons/tabler'
 import ThemeIcons from '@/components/icons/ThemeIcons.vue'
-import { ref, h } from 'vue'
-import type { TreeOption } from 'naive-ui'
-import { NIcon } from 'naive-ui'
-import { repeat } from 'seemly'
-import NoteView from '@/views/NoteView.vue'
-
-const LeftMenuActive = ref(false)
-
-const openLeftMenu = () => {
-  LeftMenuActive.value = true
-}
-
-function createData (level = 4, baseKey = ''): TreeOption[] | undefined {
-  if (!level) return undefined
-  return repeat(6 - level, undefined).map((_, index) => {
-    const key = '' + baseKey + level + index
-    return {
-      label: createLabel(level),
-      key,
-      children: createData(level - 1, key)
-    }
-  })
-}
-
-function createLabel (level: number): string {
-  if (level === 4) return '日记'
-  if (level === 3) return '2024'
-  if (level === 2) return 'W40'
-  if (level === 1) return '2024-04-19'
-  return ''
-}
-
-const menuDrawerTree = ref(createData())
-
-const onNodeClick = (info: { option: TreeOption }) => {
-  console.log('info.option', info.option)
-
-  if (info.option.children?.length) {
-    return 'toggleExpand'
-  }
-  return 'default'
-}
 </script>
 
 <template>
@@ -70,7 +28,7 @@ const onNodeClick = (info: { option: TreeOption }) => {
 <style scoped lang="scss">
 .home {
   height: 100vh;
-  padding: 0 16px;
+  //padding: 0 16px;
   overflow: hidden;
 }
 
@@ -79,14 +37,9 @@ header {
 }
 
 footer {
-  //position: fixed;
-  bottom: 0;
-  left: 16px;
-  right: 16px;
-  background: #ffffff;
-  //padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
-  padding-top: 8px;
+  padding: 8px 16px calc(env(safe-area-inset-bottom) + 8px);
+  //padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+  //padding-top: 8px;
 }
 
 .n-icon {

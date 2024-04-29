@@ -5,7 +5,7 @@ export interface FormListItem {
   icon: string
   id: string
   text: string
-  type: string
+  type: 'input' | 'select'
   placeholder: string
   options?: Recordable[]
 }
