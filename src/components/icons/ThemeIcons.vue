@@ -3,7 +3,7 @@ import type { Component } from 'vue'
 
 interface Props {
   component: Component
-  color: string
+  color?: string
 }
 
 
