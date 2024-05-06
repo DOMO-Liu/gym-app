@@ -17,24 +17,24 @@ const tabList =  [
     text: '首页',
     path: '/'
   },
-  {
-    component: CalendarView,
-    tabIcon: CalendarEvent,
-    text: '日历',
-    path: '/calendar'
-  },
+  // {
+  //   component: CalendarView,
+  //   tabIcon: CalendarEvent,
+  //   text: '日历',
+  //   path: '/calendar'
+  // },
   {
     component: StatisticsView,
     tabIcon: ChartPie,
     text: '统计',
     path: '/statistics',
   },
-  {
-    component: MyView,
-    tabIcon: ChartPie,
-    text: '我的',
-    path: '/my'
-  },
+  // {
+  //   component: MyView,
+  //   tabIcon: ChartPie,
+  //   text: '我的',
+  //   path: '/my'
+  // },
 ]
 
 const router = useRouter()
@@ -50,7 +50,7 @@ const onClickTab = (path: string, index: number) => {
 
 <template>
   <div class="flex flex-col home">
-    <div class="flex-1 overflow-auto">
+    <div class="flex-1 home-router overflow-auto">
       <router-view
         v-slot="{ Component }"
       >
@@ -110,11 +110,18 @@ const onClickTab = (path: string, index: number) => {
 .home {
   height: 100vh;
   overflow: hidden;
+  .home-router {
+    margin-bottom: calc(26px + 8px + env(safe-area-inset-bottom) + 8px);
+  }
 }
 
 footer {
   padding: 8px 0 calc(env(safe-area-inset-bottom) + 8px);
   box-shadow: 0 0 0 1px rgb(211 207 213 / 20%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .tab-item {
