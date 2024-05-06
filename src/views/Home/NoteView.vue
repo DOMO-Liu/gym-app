@@ -60,6 +60,7 @@
     </template>
   </n-auto-complete>
   <n-drawer
+    height="33vh"
     v-model:show="bottomMenuActive"
     placement="bottom"
   >
@@ -298,6 +299,10 @@ const onClickSummarizeResult = (data: SummarizeList, option: SummarizeOption) =>
 </script>
 
 <style scoped lang="scss">
+:deep(.n-drawer) {
+  height: 251px;
+}
+
 .note-title {
   font-size: 24px;
   font-weight: bold;

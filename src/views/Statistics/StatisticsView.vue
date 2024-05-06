@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useFormHook } from '@/hook/use-form-hook'
 import ChartLine from '@/views/Statistics/components/ChartLine.vue'
 import ChartBar from '@/views/Statistics/components/ChartBar.vue'
+import ChartCalendar from '@/views/Statistics/components/ChartCalendar.vue'
 
 const calendarValue = ref(addDays(Date.now(), 1).valueOf())
 
@@ -97,6 +98,7 @@ const calendarActive = [
       </h1>
       <ChartLine />
       <ChartBar />
+      <ChartCalendar />
     </div>
   </div>
 </template>
